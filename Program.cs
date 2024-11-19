@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<SwaggerAnalyzerService>();
 
 // Configure rate limiting
 builder.Services.Configure<RateLimitConfig>(builder.Configuration.GetSection("RateLimit"));

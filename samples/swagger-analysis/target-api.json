@@ -1,0 +1,139 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Inventory Management API",
+    "version": "2.0.0",
+    "description": "Sample target API for inventory management"
+  },
+  "paths": {
+    "/inventory/items": {
+      "get": {
+        "summary": "List all inventory items",
+        "responses": {
+          "200": {
+            "description": "List of items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Item"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add new item to inventory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Item added to inventory"
+          }
+        }
+      }
+    },
+    "/inventory/items/{itemId}": {
+      "get": {
+        "summary": "Get item details",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Item"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Item": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "description": "Item identifier"
+          },
+          "itemName": {
+            "type": "string",
+            "description": "Name of the item"
+          },
+          "details": {
+            "type": "string",
+            "description": "Item details"
+          },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "description": "Item cost"
+          },
+          "itemType": {
+            "type": "string",
+            "description": "Type of item"
+          },
+          "available": {
+            "type": "boolean",
+            "description": "Availability status"
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Available quantity"
+          }
+        }
+      },
+      "ItemCreate": {
+        "type": "object",
+        "properties": {
+          "itemName": {
+            "type": "string",
+            "description": "Name of the item"
+          },
+          "details": {
+            "type": "string",
+            "description": "Item details"
+          },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "description": "Item cost"
+          },
+          "itemType": {
+            "type": "string",
+            "description": "Type of item"
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Initial quantity"
+          }
+        },
+        "required": ["itemName", "cost", "itemType"]
+      }
+    }
+  }
+}
