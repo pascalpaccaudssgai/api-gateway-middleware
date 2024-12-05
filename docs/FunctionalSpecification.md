@@ -50,6 +50,14 @@ The API Gateway Middleware is a flexible, scalable solution designed to handle c
   - Transformation errors
   - Backend service errors
 
+### 5. External Tool Integration
+- **Configuration Options**
+  - Enable or disable external tool integration
+  - Set API key and endpoint for external tool
+- **Usage**
+  - Switch between internal and external tools for assessment and remediation
+  - Call external tool API if enabled
+
 ## Configuration
 
 ### API Mapping Configuration
@@ -67,7 +75,12 @@ The API Gateway Middleware is a flexible, scalable solution designed to handle c
         "CacheEnabled": true,
         "CacheDuration": "00:05:00"
       }
-    ]
+    ],
+    "ExternalTool": {
+      "Enabled": true,
+      "ApiKey": "your-api-key",
+      "Endpoint": "https://external-tool.example.com/api"
+    }
   }
 }
 ```
