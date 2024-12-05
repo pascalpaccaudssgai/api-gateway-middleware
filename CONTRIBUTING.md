@@ -20,6 +20,14 @@
 - Ensure all tests pass before submitting
 - Include integration tests when needed
 
+### Running Unit Tests
+- Ensure you have the .NET SDK installed
+- Navigate to the project root directory
+- Run the following command to execute all unit tests:
+  ```bash
+  dotnet test
+  ```
+
 ### Pull Requests
 - Use descriptive titles
 - Reference any related issues
