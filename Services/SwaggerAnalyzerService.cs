@@ -9,10 +9,14 @@ namespace ApiGateway.Services
     public class SwaggerAnalyzerService
     {
         private readonly ILogger<SwaggerAnalyzerService> _logger;
+        private readonly IExternalToolService? _externalToolService;
+        private readonly IConfiguration _configuration;
 
-        public SwaggerAnalyzerService(ILogger<SwaggerAnalyzerService> logger)
+        public SwaggerAnalyzerService(ILogger<SwaggerAnalyzerService> logger, IExternalToolService? externalToolService = null, IConfiguration configuration = null)
         {
             _logger = logger;
+            _externalToolService = externalToolService;
+            _configuration = configuration;
         }
 
         public async Task<ApiMappingResult> AnalyzeAndGenerateMapping(string sourceSwaggerPath, string targetSwaggerPath)
@@ -25,6 +29,16 @@ namespace ApiGateway.Services
                 EndpointMappings = await GenerateEndpointMappings(sourceDoc, targetDoc),
                 DataTransformations = await GenerateDataTransformations(sourceDoc, targetDoc)
             };
+
+            // Check if external tool is enabled
+            if (_externalToolService != null && _configuration.GetValue<bool>("ApiGateway:ExternalTool:Enabled"))
+            {
+                var externalResult = await _externalToolService.AnalyzeAndGenerateMappingAsync(sourceSwaggerPath, targetSwaggerPath);
+                if (externalResult != null)
+                {
+                    result = externalResult;
+                }
+            }
 
             return result;
         }

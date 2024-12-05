@@ -24,6 +24,13 @@ builder.Services.AddSingleton<IDataTransformationService, DataTransformationServ
 builder.Services.AddSingleton<IApiConfigurationService, ApiConfigurationService>();
 builder.Services.AddHttpClient();
 
+// Register external tool service if enabled
+var externalToolEnabled = builder.Configuration.GetValue<bool>("ApiGateway:ExternalTool:Enabled");
+if (externalToolEnabled)
+{
+    builder.Services.AddSingleton<IExternalToolService, ExternalToolService>();
+}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline

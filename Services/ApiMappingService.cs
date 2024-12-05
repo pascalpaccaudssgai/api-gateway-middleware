@@ -12,15 +12,18 @@ public class ApiMappingService : IApiMappingService
     private readonly IConfiguration _configuration;
     private readonly ILogger<ApiMappingService> _logger;
     private readonly HttpClient _httpClient;
+    private readonly IExternalToolService? _externalToolService;
 
     public ApiMappingService(
         IConfiguration configuration,
         ILogger<ApiMappingService> logger,
-        HttpClient httpClient)
+        HttpClient httpClient,
+        IExternalToolService? externalToolService = null)
     {
         _configuration = configuration;
         _logger = logger;
         _httpClient = httpClient;
+        _externalToolService = externalToolService;
     }
 
     public async Task<ApiMapping?> GetMappingForEndpoint(string endpoint, string method)
@@ -47,6 +50,16 @@ public class ApiMappingService : IApiMappingService
             using (var reader = new StreamReader(request.Body))
             {
                 requestBody = await reader.ReadToEndAsync();
+            }
+
+            // Check if external tool is enabled
+            if (_externalToolService != null && _configuration.GetValue<bool>("ApiGateway:ExternalTool:Enabled"))
+            {
+                var transformedRequest = await _externalToolService.TransformRequestAsync(requestBody);
+                if (transformedRequest != null)
+                {
+                    return transformedRequest;
+                }
             }
 
             // Transform the data based on the source and target formats
